@@ -1,5 +1,9 @@
 # DevUtils - 开发者工具箱
 
+![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
+![GitHub stars](https://img.shields.io/github/stars/youling-dev/dev-utils?style=social)
+![Pure Frontend](https://img.shields.io/badge/pure%20frontend-100%25%20local-blue)
+
 > 纯前端开发者工具箱，无需后端，100% 本地运行，数据不出浏览器。
 
 ## ✨ 功能
