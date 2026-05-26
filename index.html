@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevUtils - 开发者工具箱</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="header-inner">
+        <h1>🔧 DevUtils</h1>
+        <p class="subtitle">纯前端开发者工具箱 · 无需后端 · 100% 本地运行</p>
+      </div>
+      <div class="theme-toggle" onclick="toggleTheme()" title="切换主题">🌓</div>
+    </header>
+
+    <div class="toolbar">
+      <input type="text" id="toolSearch" placeholder="搜索工具..." oninput="filterTools(this.value)">
+      <span class="toolCount" id="toolCount">9 个工具</span>
+    </div>
+
+    <main class="tool-grid" id="toolGrid">
+      <!-- Base64 -->
+      <div class="tool-card" data-name="base64 编码解码" data-tags="base64 encode decode 编码 解码">
+        <div class="card-header">
+          <span class="card-icon">🔤</span>
+          <h3>Base64 编解码</h3>
+        </div>
+        <div class="card-body">
+          <p>文本与 Base64 互相转换</p>
+          <textarea class="input" id="b64Input" placeholder="输入文本或 Base64..."></textarea>
+          <div class="btn-row">
+            <button onclick="b64Encode()">编码</button>
+            <button onclick="b64Decode()">解码</button>
+            <button class="secondary" onclick="b64Clear()">清空</button>
+          </div>
+          <textarea class="output" id="b64Output" readonly placeholder="结果..."></textarea>
+        </div>
+      </div>
+
+      <!-- JSON Formatter -->
+      <div class="tool-card" data-name="json 格式化" data-tags="json format 格式化 校验 压缩">
+        <div class="card-header">
+          <span class="card-icon">{}</span>
+          <h3>JSON 格式化</h3>
+        </div>
+        <div class="card-body">
+          <p>格式化 / 压缩 / 校验 JSON</p>
+          <textarea class="input" id="jsonInput" placeholder='{"key": "value"}'></textarea>
+          <div class="btn-row">
+            <button onclick="jsonFormat()">格式化</button>
+            <button onclick="jsonMinify()">压缩</button>
+            <button class="secondary" onclick="jsonClear()">清空</button>
+          </div>
+          <textarea class="output" id="jsonOutput" readonly placeholder="结果..."></textarea>
+        </div>
+      </div>
+
+      <!-- URL Parser -->
+      <div class="tool-card" data-name="url 参数解析" data-tags="url parse 解析 参数 query string">
+        <div class="card-header">
+          <span class="card-icon">🔗</span>
+          <h3>URL 参数解析</h3>
+        </div>
+        <div class="card-body">
+          <p>提取 URL 中的所有查询参数</p>
+          <input class="input-url" id="urlInput" type="text" placeholder="https://example.com?key=value&foo=bar">
+          <button onclick="parseUrl()">解析</button>
+          <div id="urlOutput" class="url-result"></div>
+        </div>
+      </div>
+
+      <!-- Timestamp -->
+      <div class="tool-card" data-name="时间戳转换" data-tags="timestamp 时间戳 unix 转换 date">
+        <div class="card-header">
+          <span class="card-icon">⏰</span>
+          <h3>时间戳转换</h3>
+        </div>
+        <div class="card-body">
+          <p>Unix 时间戳与日期互相转换</p>
+          <div class="ts-row">
+            <input type="number" id="tsInput" placeholder="Unix 时间戳 (秒)">
+            <button onclick="tsToDate()">→ 日期</button>
+            <button onclick="nowStamp()">当前</button>
+          </div>
+          <div class="ts-output" id="tsOutput"></div>
+          <hr class="divider">
+          <input type="text" id="dateInput" placeholder="2026-05-26 13:00:00">
+          <button onclick="dateToTs()">→ 时间戳</button>
+          <div class="ts-output" id="dateOutput"></div>
+        </div>
+      </div>
+
+      <!-- Color Converter -->
+      <div class="tool-card" data-name="颜色转换" data-tags="color rgb hex hsl 颜色 转换 拾色器">
+        <div class="card-header">
+          <span class="card-icon">🎨</span>
+          <h3>颜色格式转换</h3>
+        </div>
+        <div class="card-body">
+          <p>HEX / RGB / HSL 互相转换</p>
+          <div class="color-picker-row">
+            <input type="color" id="colorPicker" value="#3498db" onchange="colorFromPicker(this.value)">
+            <input type="text" id="colorHex" value="#3498db" placeholder="#RRGGBB" oninput="colorFromHex(this.value)">
+          </div>
+          <div class="color-results" id="colorResults">
+            <div class="color-item"><label>HEX</label><span id="outHex">#3498db</span><button class="copy-btn" onclick="copyText('#3498db')">复制</button></div>
+            <div class="color-item"><label>RGB</label><span id="outRgb">rgb(52, 152, 219)</span><button class="copy-btn" onclick="copyText('rgb(52, 152, 219)')">复制</button></div>
+            <div class="color-item"><label>HSL</label><span id="outHsl">hsl(204, 63%, 53%)</span><button class="copy-btn" onclick="copyText('hsl(204, 63%, 53%)')">复制</button></div>
+          </div>
+          <div class="color-preview" id="colorPreview" style="background:#3498db"></div>
+        </div>
+      </div>
+
+      <!-- Regex Tester -->
+      <div class="tool-card" data-name="正则测试器" data-tags="regex 正则 expression 测试 匹配">
+        <div class="card-header">
+          <span class="card-icon">🔍</span>
+          <h3>正则表达式测试</h3>
+        </div>
+        <div class="card-body">
+          <p>实时测试正则表达式匹配</p>
+          <div class="regex-row">
+            <input type="text" id="regexPattern" placeholder="正则表达式" oninput="testRegex()">
+            <input type="text" id="regexFlags" placeholder="flags" value="g" style="width:60px" oninput="testRegex()">
+          </div>
+          <textarea class="input" id="regexText" placeholder="测试文本..." oninput="testRegex()"></textarea>
+          <div id="regexOutput" class="regex-result"></div>
+        </div>
+      </div>
+
+      <!-- Text Diff -->
+      <div class="tool-card" data-name="文本对比" data-tags="diff 文本 对比 compare 差异">
+        <div class="card-header">
+          <span class="card-icon">📝</span>
+          <h3>文本差异对比</h3>
+        </div>
+        <div class="card-body">
+          <p>逐行对比两段文本差异</p>
+          <div class="diff-inputs">
+            <textarea id="diffLeft" placeholder="原文本"></textarea>
+            <textarea id="diffRight" placeholder="修改后文本"></textarea>
+          </div>
+          <button onclick="computeDiff()">对比</button>
+          <pre id="diffOutput" class="diff-output"></pre>
+        </div>
+      </div>
+
+      <!-- Hash Generator -->
+      <div class="tool-card" data-name="hash 生成器" data-tags="hash md5 sha 加密 摘要 crc32">
+        <div class="card-header">
+          <span class="card-icon">#️⃣</span>
+          <h3>Hash 生成器</h3>
+        </div>
+        <div class="card-body">
+          <p>生成多种 Hash 值 (SHA-1/SHA-256/SHA-512)</p>
+          <textarea class="input" id="hashInput" placeholder="输入要 Hash 的文本..."></textarea>
+          <button onclick="generateHash()">生成</button>
+          <div id="hashOutput" class="hash-results"></div>
+        </div>
+      </div>
+
+      <!-- Markdown Preview -->
+      <div class="tool-card" data-name="markdown 预览" data-tags="markdown preview 预览 渲染 编辑器">
+        <div class="card-header">
+          <span class="card-icon">📖</span>
+          <h3>Markdown 实时预览</h3>
+        </div>
+        <div class="card-body">
+          <p>左侧编辑，右侧实时预览</p>
+          <div class="md-split">
+            <textarea id="mdInput" placeholder="# Hello World&#10;&#10;**粗体** 和 *斜体*&#10;&#10;- 列表项 1&#10;- 列表项 2" oninput="renderMd()"></textarea>
+            <div id="mdOutput" class="md-preview"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p>DevUtils v1.0.0 · 100% 前端运行 · 数据不上传</p>
+      <p class="donate">如果觉得有用，欢迎打赏支持 ✨</p>
+    </footer>
+  </div>
+
+  <script src="js/utils.js"></script>
+</body>
+</html>
